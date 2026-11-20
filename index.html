@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Escala de Cuidados com a Mãezinha - Fins de Semana</title>
+    <!-- Tailwind CSS para estilização responsiva e moderna -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts: Inter para alta legibilidade -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <!-- Lucide Icons via CDN para ícones limpos e acessíveis -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body class="min-h-screen flex flex-col antialiased selection:bg-amber-200 selection:text-amber-900">
+
+    <!-- Cabeçalho Acolhedor -->
+    <header class="bg-gradient-to-r from-amber-700 via-amber-800 to-stone-800 text-white shadow-md no-print">
+        <div class="max-w-6xl mx-auto px-4 py-6 sm:px-6 lg:px-8 flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+            <div class="flex items-center gap-3.5">
+                <div class="bg-amber-100/20 p-3 rounded-2xl backdrop-blur-sm border border-amber-200/30">
+                    <i data-lucide="heart-handshake" class="w-8 h-8 text-amber-200"></i>
+                </div>
+                <div>
+                    <h1 class="text-2xl sm:text-3xl font-bold tracking-tight text-white">
+                        Cuidados com a Mãezinha
+                    </h1>
+                    <p class="text-amber-100 text-sm sm:text-base mt-0.5">
+                        Escala de revezamento dos fins de semana (Sábado e Domingo) • 8 Irmãos
+                    </p>
+                </div>
+            </div>
+
+            <!-- Botões de Ação Rápida no Topo -->
+            <div class="flex flex-wrap items-center gap-2.5">
+                <button onclick="copiarParaWhatsApp()" class="flex-1 sm:flex-none inline-flex items-center justify-center gap-2 bg-emerald-600 hover:bg-emerald-500 active:bg-emerald-700 text-white font-semibold px-4 py-3 rounded-xl shadow-sm transition-all cursor-pointer text-sm sm:text-base">
+                    <i data-lucide="share-2" class="w-5 h-5"></i>
+                    <span>Copiar p/ WhatsApp</span>
+                </button>
+                <button onclick="window.print()" class="flex-1 sm:flex-none inline-flex items-center justify-center gap-2 bg-white/15 hover:bg-white/25 active:bg-white/30 text-white border border-white/25 font-semibold px-4 py-3 rounded-xl transition-all cursor-pointer text-sm sm:text-base">
+                    <i data-lucide="printer" class="w-5 h-5"></i>
+                    <span>Imprimir / PDF</span>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Cabeçalho exclusivo para Impressão -->
+    <div class="hidden print-only px-6 pt-6 pb-4 border-b-2 border-stone-800 mb-4">
+        <h1 class="text-2xl font-bold text-stone-900">Escala de Fins de Semana - Cuidados com a Mãezinha</h1>
+        <p class="text-sm text-stone-600 mt-1" id="printSubtitle">Revezamento de Sábado e Domingo entre os 8 irmãos</p>
+    </div>
+
+    <!-- Conteúdo Principal -->
+    <main class="flex-grow max-w-6xl w-full mx-auto px-4 py-6 sm:px-6 lg:px-8 space-y-6 print-container">
+
+        <!-- Banner Informativo da Rotina -->
+        <div class="bg-amber-50 border border-amber-200 rounded-2xl p-4 sm:p-5 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 no-print shadow-sm">
+            <div class="flex items-start gap-3">
+                <i data-lucide="info" class="w-6 h-6 text-amber-700 shrink-0 mt-0.5"></i>
+                <div class="text-sm sm:text-base text-stone-700">
+                    <span class="font-semibold text-stone-900">Rotina da Semana:</span> De Segunda a Sexta-feira as 4 irmãs se revezam. Esta tabela organiza exclusivamente os <strong class="text-amber-900">fins de semana completos (Sábado e Domingo)</strong> intercalando 1 irmão por vez.
+                </div>
+            </div>
+            <button onclick="toggleConfigPanel()" id="btnToggleConfig" class="shrink-0 inline-flex items-center gap-2 text-amber-800 hover:text-amber-950 bg-amber-100 hover:bg-amber-200/70 font-semibold px-4 py-2.5 rounded-xl text-sm transition-colors cursor-pointer">
+                <i data-lucide="settings-2" class="w-4 h-4"></i>
+                <span id="txtToggleConfig">Ocultar Configurações</span>
+            </button>
+        </div>
+
+        <!-- Painel de Configurações (Irmãos e Período) -->
+        <section id="configPanel" class="grid grid-cols-1 lg:grid-cols-12 gap-6 no-print">
+            
+            <!-- Coluna 1: Ordem e Nomes dos 8 Irmãos -->
+            <div class="lg:col-span-7 bg-white rounded-2xl shadow-sm border border-stone-200 p-5 sm:p-6">
+                <div class="flex items-center justify-between mb-4">
+                    <div>
+                        <h2 class="text-lg sm:text-xl font-bold text-stone-900 flex items-center gap-2">
+                            <i data-lucide="users" class="w-5 h-5 text-amber-700"></i>
+                            Ordem dos 8 Irmãos
+                        </h2>
+                        <p class="text-sm text-stone-500 mt-0.5">
+                            Edite os nomes ou use as setas para definir a fila de revezamento.
+                        </p>
+                    </div>
+                    <button onclick="resetarNomesPadrao()" title="Restaurar nomes de exemplo" class="text-xs sm:text-sm text-stone-500 hover:text-amber-700 underline px-2 py-1 rounded cursor-pointer">
+                        Restaurar padrão
+                    </button>
+                </div>
+
+                <!-- Lista Editável dos 8 Irmãos -->
+                <div id="listaIrmaosContainer" class="space-y-2.5">
+                    <!-- Renderizado via JavaScript -->
+                </div>
+            </div>
+
+            <!-- Coluna 2: Parâmetros da Escala -->
+            <div class="lg:col-span-5 bg-white rounded-2xl shadow-sm border border-stone-200 p-5 sm:p-6 flex flex-col justify-between">
+                <div class="space-y-5">
+                    <div>
+                        <h2 class="text-lg sm:text-xl font-bold text-stone-900 flex items-center gap-2">
+                            <i data-lucide="calendar-days" class="w-5 h-5 text-amber-700"></i>
+                            Período da Escala
+                        </h2>
+                        <p class="text-sm text-stone-500 mt-0.5">
+                            Escolha o sábado inicial e a duração desejada.
+                        </p>
+                    </div>
+
+                    <!-- Data Inicial -->
+                    <div>
+                        <label for="dataInicio" class="block text-sm font-semibold text-stone-700 mb-1.5">
+                            Data de Início (Sábado):
+                        </label>
+                        <input type="date" id="dataInicio" onchange="aoMudarDataInicio()" class="w-full rounded-xl border border-stone-300 bg-stone-50 px-4 py-3 text-base font-medium text-stone-900 focus:border-amber-600 focus:bg-white focus:outline-none focus:ring-2 focus:ring-amber-500/20">
+                        <p id="avisoAjusteSabado" class="text-xs text-amber-700 mt-1.5 hidden flex items-center gap-1">
+                            <i data-lucide="alert-circle" class="w-3.5 h-3.5"></i>
+                            <span>Data ajustada automaticamente para o Sábado correspondente.</span>
+                        </p>
+                    </div>
+
+                    <!-- Duração / Quantidade de Fins de Semana -->
+                    <div>
+                        <label for="presetDuracao" class="block text-sm font-semibold text-stone-700 mb-1.5">
+                            Duração da Escala:
+                        </label>
+                        <select id="presetDuracao" onchange="aoMudarPresetDuracao()" class="w-full rounded-xl border border-stone-300 bg-stone-50 px-4 py-3 text-base font-medium text-stone-900 focus:border-amber-600 focus:bg-white focus:outline-none focus:ring-2 focus:ring-amber-500/20">
+                            <option value="8">1 Ciclo Completo (8 fins de semana / ~2 meses)</option>
+                            <option value="13">3 Meses (13 fins de semana)</option>
+                            <option value="16">2 Ciclos Completos (16 fins de semana / ~4 meses)</option>
+                            <option value="26" selected>6 Meses (26 fins de semana)</option>
+                            <option value="52">1 Ano Completo (52 fins de semana)</option>
+                            <option value="custom">Personalizado (escolher quantidade)...</option>
+                        </select>
+                    </div>
+
+                    <!-- Campo Personalizado de Fins de Semana -->
+                    <div id="customQtdWrapper" class="hidden">
+                        <label for="qtdPersonalizada" class="block text-sm font-semibold text-stone-700 mb-1.5">
+                            Quantidade de fins de semana (1 a 104):
+                        </label>
+                        <input type="number" id="qtdPersonalizada" min="1" max="104" value="12" onchange="gerarEscala()" class="w-full rounded-xl border border-stone-300 bg-stone-50 px-4 py-3 text-base font-medium text-stone-900 focus:border-amber-600 focus:bg-white focus:outline-none focus:ring-2 focus:ring-amber-500/20">
+                    </div>
+
+                    <!-- Irmão que inicia a escala -->
+                    <div>
+                        <label for="irmaoInicialSelect" class="block text-sm font-semibold text-stone-700 mb-1.5">
+                            Quem fica no 1º fim de semana?
+                        </label>
+                        <select id="irmaoInicialSelect" onchange="gerarEscala()" class="w-full rounded-xl border border-stone-300 bg-stone-50 px-4 py-3 text-base font-medium text-stone-900 focus:border-amber-600 focus:bg-white focus:outline-none focus:ring-2 focus:ring-amber-500/20">
+                            <!-- Preenchido via JS -->
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Resumo Rápido -->
+                <div class="mt-6 pt-4 border-t border-stone-100 flex items-center justify-between text-sm text-stone-600">
+                    <span>Total gerado: <strong id="totalFdsLabel" class="text-stone-900">26 fins de semana</strong></span>
+                    <button onclick="limparTrocasEConcluidos()" class="text-rose-600 hover:text-rose-800 font-medium underline cursor-pointer">
+                        Limpar marcações
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Barra de Resumo e Filtro de Irmão -->
+        <section class="bg-white rounded-2xl shadow-sm border border-stone-200 p-4 sm:p-5 flex flex-col sm:flex-row sm:items-center justify-between gap-4 no-print">
+            <div class="flex items-center gap-3">
+                <div class="bg-amber-100 text-amber-800 p-2.5 rounded-xl">
+                    <i data-lucide="calendar-check" class="w-6 h-6"></i>
+                </div>
+                <div>
+                    <h2 class="text-lg sm:text-xl font-bold text-stone-900">Escala Programada</h2>
+                    <p class="text-xs sm:text-sm text-stone-500" id="periodoResumoTexto">Carregando datas...</p>
+                </div>
+            </div>
+
+            <!-- Filtro por Irmão -->
+            <div class="flex items-center gap-2 w-full sm:w-auto">
+                <label for="filtroIrmao" class="text-sm font-semibold text-stone-700 whitespace-nowrap">Filtrar por:</label>
+                <select id="filtroIrmao" onchange="renderizarEscala()" class="w-full sm:w-52 rounded-xl border border-stone-300 bg-stone-50 px-3.5 py-2.5 text-sm font-medium text-stone-900 focus:border-amber-600 focus:outline-none">
+                    <option value="TODOS">Todos os 8 irmãos</option>
+                    <!-- Preenchido via JS -->
+                </select>
+            </div>
+        </section>
+
+        <!-- Visualização em Tabela (Desktop e Impressão) -->
+        <section id="desktopTableWrapper" class="hidden md:block bg-white rounded-2xl shadow-sm border border-stone-200 overflow-hidden">
+            <div class="overflow-x-auto">
+                <table class="w-full text-left border-collapse">
+                    <thead>
+                        <tr class="bg-stone-100 border-b border-stone-200 text-stone-700 text-sm uppercase tracking-wider">
+                            <th class="py-4 px-5 font-bold w-24">Nº</th>
+                            <th class="py-4 px-5 font-bold">Fim de Semana (Sábado e Domingo)</th>
+                            <th class="py-4 px-5 font-bold">Irmão(ã) Responsável</th>
+                            <th class="py-4 px-5 font-bold text-center no-print">Status / Troca</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tabelaEscalaBody" class="divide-y divide-stone-200 text-base">
+                        <!-- Linhas geradas via JS -->
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- Visualização em Cards (Mobile / Telas Menores) -->
+        <section id="mobileCardsWrapper" class="md:hidden space-y-3.5 no-print">
+            <!-- Cards gerados via JS -->
+        </section>
+
+        <!-- Resumo de Participação por Irmão -->
+        <section class="bg-white rounded-2xl shadow-sm border border-stone-200 p-5 sm:p-6 no-print">
+            <h3 class="text-base sm:text-lg font-bold text-stone-900 mb-3 flex items-center gap-2">
+                <i data-lucide="bar-chart-3" class="w-5 h-5 text-amber-700"></i>
+                Distribuição neste Período
+            </h3>
+            <div id="resumoParticipacaoGrid" class="grid grid-cols-2 sm:grid-cols-4 gap-3">
+                <!-- Preenchido via JS -->
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Rodapé -->
+    <footer class="bg-stone-100 border-t border-stone-200 py-5 px-4 mt-8 text-center text-sm text-stone-500 no-print">
+        <p>As alterações nos nomes, ordem e trocas são salvas automaticamente neste navegador.</p>
+    </footer>
+
+    <!-- Notificação Flutuante (Toast) -->
+    <div id="toastContainer" class="fixed bottom-5 right-5 z-50 flex flex-col gap-2 pointer-events-none"></div>
+
+    <!-- Modal para Troca Pontual de Fim de Semana -->
+    <div id="modalTroca" class="fixed inset-0 z-50 hidden items-center justify-center bg-stone-900/60 backdrop-blur-xs p-4 no-print">
+        <div class="bg-white rounded-2xl shadow-xl border border-stone-200 max-w-md w-full p-6 space-y-5">
+            <div class="flex items-start justify-between">
+                <div>
+                    <h3 class="text-xl font-bold text-stone-900">Substituição Pontual</h3>
+                    <p id="modalTrocaSubtitulo" class="text-sm text-stone-600 mt-1">Fim de semana #1</p>
+                </div>
+                <button onclick="fecharModalTroca()" class="p-1.5 rounded-lg text-stone-400 hover:text-stone-700 hover:bg-stone-100 cursor-pointer">
+                    <i data-lucide="x" class="w-5 h-5"></i>
+                </button>
+            </div>
+
+            <div class="bg-amber-50 border border-amber-200 rounded-xl p-3.5 text-sm text-amber-900">
+                Esta alteração muda apenas este fim de semana específico, mantendo a sequência normal dos demais fins de semana intacta.
+            </div>
+
+            <div>
+                <label for="selectNovoResponsavel" class="block text-sm font-semibold text-stone-700 mb-2">
+                    Quem vai ficar com a mãezinha neste fim de semana?
+                </label>
+                <select id="selectNovoResponsavel" class="w-full rounded-xl border border-stone-300 bg-stone-50 px-4 py-3 text-base font-medium text-stone-900 focus:border-amber-600 focus:outline-none">
+                    <!-- Preenchido via JS -->
+                </select>
+            </div>
+
+            <div class="flex flex-col-reverse sm:flex-row justify-end gap-2.5 pt-2">
+                <button onclick="restaurarOriginalNoModal()" id="btnRestaurarOriginal" class="px-4 py-2.5 rounded-xl border border-stone-300 text-stone-700 font-semibold hover:bg-stone-100 text-sm cursor-pointer">
+                    Voltar ao original
+                </button>
+                <button onclick="confirmarTrocaPontual()" class="px-5 py-2.5 rounded-xl bg-amber-700 hover:bg-amber-800 text-white font-semibold text-sm shadow-sm cursor-pointer">
+                    Confirmar Troca
+                </button>
+            </div>
+        </div>
+    </div>
+
+<script src="script.js"></script>
+
+</body>
+</html>

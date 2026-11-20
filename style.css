@@ -1,0 +1,57 @@
+    /* Estilos base e tipografia */
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #fdfbf7; /* Tom creme suave e acolhedor */
+            color: #1e293b;
+        }
+
+        /* Animação suave para notificações (Toast) */
+        @keyframes slideUp {
+            from { transform: translateY(100%); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+        .toast-enter {
+            animation: slideUp 0.3s ease-out forwards;
+        }
+
+        /* Estilos exclusivos para Impressão / Salvar em PDF */
+        @media print {
+            body {
+                background-color: #ffffff !important;
+                color: #000000 !important;
+                font-size: 12pt;
+            }
+            .no-print {
+                display: none !important;
+            }
+            .print-only {
+                display: block !important;
+            }
+            .print-container {
+                box-shadow: none !important;
+                border: none !important;
+                padding: 0 !important;
+                margin: 0 !important;
+                width: 100% !important;
+                max-width: 100% !important;
+            }
+            table {
+                width: 100% !important;
+                border-collapse: collapse !important;
+            }
+            th, td {
+                border: 1px solid #cbd5e1 !important;
+                padding: 8px 12px !important;
+                text-align: left !important;
+            }
+            tr {
+                break-inside: avoid;
+            }
+            /* Força exibição da tabela na impressão mesmo em telas menores */
+            #desktopTableWrapper {
+                display: block !important;
+            }
+            #mobileCardsWrapper {
+                display: none !important;
+            }
+        }
